@@ -25,6 +25,10 @@
         <v-chip :color="getColor(item.score)" dark>{{ item.score }}</v-chip>
       </template>
 
+      <template v-slot:item.canBeDownloaded="{ item }">
+        <v-icon @click='downloadGame(item)' v-if='item.canBeDownloaded'>fa-download</v-icon>
+      </template>
+
     </v-data-table>
   </v-card>
 </template>
@@ -53,7 +57,7 @@
           { text: 'Developer', value: 'developer' },
           { text: 'Rating', value: 'rating' },
           { text: 'Extension', value: 'extension' },
-          { text: 'test', value: 'test' }
+          { text: '', value: 'canBeDownloaded' }
         ],
         info: []
       }
