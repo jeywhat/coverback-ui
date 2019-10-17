@@ -18,7 +18,7 @@
             class="elevation-1">
 
       <template v-slot:item.image="{ item }">
-        <img v-bind:src="'data:image/jpeg;base64,'+item.image" @click="downloadGame(item)"/>
+          <img v-bind:src="'data:image/jpeg;base64,'+item.image" @click="downloadGame(item)"/>
       </template>
 
       <template v-slot:item.score="{ item }">
@@ -38,6 +38,11 @@
   const axios = require('axios').default;
 
   export default {
+      props: {
+          url: {
+              type: String
+          }
+      },
     data () {
       return {
         expanded: [],
@@ -45,11 +50,7 @@
         search: '',
         headers: [
           { text: '', value: 'image', sortable: false },
-          {
-            text: 'Title',
-            align: 'left',
-            value: 'title',
-          },
+          { text: 'Title', align: 'left', value: 'title'},
           { text: 'Size (Mo)', value: 'size' },
           { text: 'Score', value: 'score' },
           { text: 'Release Date', value: 'releaseDate' },
@@ -59,11 +60,10 @@
           { text: 'Extension', value: 'extension' },
           { text: '', value: 'canBeDownloaded' }
         ],
-        info: []
+        info: [],
+          sheet: false,
+          api: ''
       }
-    },
-    mounted () {
-      axios.get('http://localhost:8090/game/all').then(response => (this.info = response.data))
     },
     methods: {
       getColor (calories) {
@@ -81,15 +81,19 @@
       },downloadGame(item){
         axios({
           method: 'get',
-          url: 'http://localhost:8090/game/'+item.namefile+'/download',
+          url: this.api+item.namefile+'/download',
           responseType: 'arraybuffer'
-        })
-                .then(response => {
-
-                  this.forceFileDownload(response, item)
-
-                })
+        }).then(response => { this.forceFileDownload(response, item) })
       }
-    }
+    },
+      watch: {
+          url: function() {
+              this.api = this.url;
+              axios.get(this.url + 'all').then(response => (this.info = response.data)).catch(error => {
+                  this.info = [];
+                  console.log(error.response);
+              });
+          }
+      }
   }
 </script>
