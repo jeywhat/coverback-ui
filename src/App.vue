@@ -34,7 +34,12 @@
                   color="red"
                   @click="sheet = !sheet"
           >close settings</v-btn>
-          <input  class="text-center" id="api" style="width:100%" type="text" v-model.lazy='apiUrl'/>
+
+          <p class="text-center">
+            <label>API URL :</label>
+              <input class="text-left" style="width:10%; margin-left:10px;" id="api" type="text" v-model.lazy='apiUrl'/>
+          </p>
+
         </v-sheet>
       </v-bottom-sheet>
     </v-app-bar>
