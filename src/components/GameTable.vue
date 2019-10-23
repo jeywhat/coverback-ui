@@ -31,7 +31,7 @@
       </template>
 
       <template v-slot:item.canBeDownloaded="{ item }">
-        <v-icon @click='downloadGame(item)' v-if='item.canBeDownloaded'>fa-download</v-icon>
+        <div v-if='item.canBeDownloaded'><a :href="api+item.namefile+'/download'"><v-icon>fa-download</v-icon></a></div>
       </template>
 
     </v-data-table>
@@ -73,24 +73,10 @@
       }
     },
     methods: {
-      getColor (calories) {
-        if (calories < 40) return 'red'
-        else if (calories > 70) return 'green'
+      getColor (score) {
+        if (score < 40) return 'red'
+        else if (score > 70) return 'green'
         else return 'orange'
-      },
-      forceFileDownload(response, item){
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', item.title+'.'+item.extension) //or any other extension
-        document.body.appendChild(link)
-        link.click()
-      },downloadGame(item){
-        axios({
-          method: 'get',
-          url: this.api+item.namefile+'/download',
-          responseType: 'arraybuffer'
-        }).then(response => { this.forceFileDownload(response, item) })
       }
     },
       watch: {
